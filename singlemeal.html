@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meals</title>
+  <link rel="stylesheet" href="css/css/bootstrap.min.css">
+  <style>
+    /* Basic styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 40px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div id="mealsContainer" class="row">
+    <!-- This is where the meals will be displayed -->
+  </div>
+</div>
+
+<script>
+
+  // Function to display meals
+  function displayMeal(mealID) {
+    var mealsContainer = document.getElementById('mealsContainer');
+    mealsContainer.innerHTML = '';
+
+    if (mealID) {
+      var mealUrl = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + mealID;
+            //console.log(categoryUrl)
+            fetch(mealUrl)
+              .then((response) => response.json())
+              .then((mealData) => {
+                meal=mealData.meals[0]
+        var mealHtml = `
+        <div>
+           <center><h2>${meal.strMeal}</h2></center>
+            <br>
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+
+            <p><strong>Category:</strong> ${meal.strCategory}</p>
+            <p><strong>Area:</strong> ${meal.strArea}</p>
+            <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+            <p><strong>Ingredients:</strong></p>
+            <ul>
+                <li>${meal.strMeasure1} ${meal.strIngredient1}</li>
+                <li>${meal.strMeasure2} ${meal.strIngredient2}</li>
+                <li>${meal.strMeasure3} ${meal.strIngredient3}</li>
+                <li>${meal.strMeasure4} ${meal.strIngredient4}</li>
+                <li>${meal.strMeasure5} ${meal.strIngredient5}</li>
+                <li>${meal.strMeasure6} ${meal.strIngredient6}</li>
+                <li>${meal.strMeasure7} ${meal.strIngredient7}</li>
+                <li>${meal.strMeasure8} ${meal.strIngredient8}</li>
+                <li>${meal.strMeasure9} ${meal.strIngredient9}</li>
+            </ul>
+            <p><strong>Tags:</strong> ${meal.strTags}</p>
+            <p><strong>Video:</strong> <a href="${meal.strYoutube}" target="_blank">Watch on YouTube</a></p>
+        </div>
+        `;
+        mealsContainer.innerHTML = mealHtml;
+
+              })
+    } else {
+      mealsContainer.innerHTML = '<p>No meals found</p>';
+    }
+  }
+
+  // Get category from URL
+  var urlParams = new URLSearchParams(window.location.search);
+  var mealID = urlParams.get('id');
+  // console.log(mealID)
+
+  // Fetch meals based on category
+  if (mealID) {
+    displayMeal(mealID);
+  } else {
+    console.error('Category not specified in URL');
+  }
+</script>
+
+</body>
+</html>
